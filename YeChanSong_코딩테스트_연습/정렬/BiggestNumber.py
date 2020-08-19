@@ -1,74 +1,59 @@
-def sorting(numbers):
-
-    #print(numbers)
-    
-    for k in range(1,len(numbers)):
-        for i in range(k,0,-1):
-            flag = True
-            #print(numbers[i-1],numbers[i])
-            if numbers[i-1] == numbers[i]:
-                continue
-            tmp = ''
-            if len(numbers[i-1]) < len(numbers[i]):
-                tmp = numbers[i-1]
-                for j in range(len(numbers[i])-len(numbers[i-1])):
-                    tmp += numbers[i-1][-1]
-                
-                for j in range(len(tmp)):
-                
-                    if tmp[j] > numbers[i][j]:
-                        break
-                    if tmp[j] < numbers[i][j]:
-                        flag = False
-                        break
-                    if tmp[j] == numbers[i][j]:
-                        continue
-                
-                if flag == False:
-                    numbers[i-1], numbers[i] = numbers[i], numbers[i-1]    
-                
-            elif len(numbers[i-1]) > len(numbers[i]):
-                tmp = numbers[i]
-                for j in range(len(numbers[i-1])-len(numbers[i])):
-                    tmp += numbers[i][-1]
-                
-                for j in range(len(tmp)):
-                
-                    if numbers[i-1][j] > tmp[j]:
-                        break
-                    if numbers[i-1][j] < tmp[j]:
-                        flag = False
-                        break
-                    if numbers[i-1][j] == tmp[j]:
-                        continue
-                
-                if flag == False:
-                    numbers[i-1], numbers[i] = numbers[i], numbers[i-1]    
-                
-            else:
-                for j in range(len(numbers[i-1])):
-                
-                    if numbers[i-1][j] > numbers[i][j]:
-                        break
-                    if numbers[i-1][j] < numbers[i][j]:
-                        flag = False
-                        break
-                    if numbers[i-1][j] == numbers[i][j]:
-                        continue
-                
-                if flag == False:
-                    numbers[i-1], numbers[i] = numbers[i], numbers[i-1]
-
-        #print(numbers)
-    res = ''
-    for i in numbers:
-        res += i
-    return res
-
 def solution(numbers):
     answer = ''
-    answer = sorting(list(map(str,numbers)))
+    strnum = list(map(str,numbers))
+    numset = []
+    for i in strnum:
+        tmp = i
+        while i != '0':
+            if len(tmp) == 4:
+                break
+            else:
+                tmp+=i[len(i)-1]
+        numset.append([tmp,i])
+        #[랭크, 원래 값]
+
+    flag = []
+    ll = []
+    srtd = sorted(numset)
     
+    srtd22 = sorted(numset)
+    #print(srtd)
+    start, end, tmp = 0, 0, 0
     
-    
+    for p in range(len(srtd)):
+        tmp = srtd[p]
+        
+        if p == len(srtd)-1 and tmp[0] == srtd[start][0]:
+            #마지막 원소까지 같은 랭크의 경우
+            srtd22[start:] = reversed(srtd22[start:])
+            break
+        
+        if p == len(srtd)-1 and tmp[0] != srtd[start][0]:
+            #마지막 원소에서 다른 랭크의 경우
+            srtd22[start:-1] = reversed(srtd22[start:-1])
+            break
+        
+        
+        if tmp[0] == srtd[start][0]:
+            #같은 랭크를 가진 경우
+            continue
+        
+        end = p-1
+        srtd22[start:end+1] = reversed(srtd22[start:end+1])
+        
+        start = p
+        
+    print(srtd22)
+    chksm = False
+    for k in reversed(srtd22):
+        
+        if k[1] == '0' and chksm == False:
+            chksm = True
+            answer += k[1]
+        elif k[1] == '0' and chksm == True:
+            continue
+        else:
+            answer += k[1]
+        
+    #print(answer)
     return answer
